@@ -1,0 +1,20 @@
+####################
+#     Crontabs     #
+####################
+
+# Backup Script 12AM BST
+0 0 * * * sh /scripts/backup-databases.sh  && echo "$(date +"\%d-\%m-\%Y-\%H-\%M-\%S") Databases Complete" >> "/var/log/rclone/backup-log-$(date +"\%d-\%m-\%Y").txt"
+0 0 * * * sh /scripts/backup-servers.sh && echo "$(date +"\%d-\%m-\%Y-\%H-\%M-\%S") Servers Complete" >> "/var/log/rclone/backup-log-$(date +"\%d-\%m-\%Y").txt"
+0 0 * * * sh /scripts/backup-webroot.sh && echo "$(date +"\%d-\%m-\%Y-\%H-\%M-\%S") Webroot Complete" >> "/var/log/rclone/backup-log-$(date +"\%d-\%m-\%Y").txt"
+
+# Backups Uploading RClone 2AM BST
+0 2 * * * rclone move /backups backups: --log-file=/var/log/rclone/backup-log-$(date +"\%d-\%m-\%Y").txt --log-level DEBUG && echo "$(date +"\%d-\%m-\%Y-\%H-\%M-\%S") Upload Complete" >> "/var/log/rclone/backup-log-$(date +"\%d-\%m-\%Y").txt"
+
+# Discord Backup Report 8AM BST
+0 8 * * * cd /applications/uploader && /root/.deno/bin/deno run -A index.js && rm /var/log/rclone/*
+
+# Hetrix Tools
+* * * * * bash /etc/hetrixtools/hetrixtools_agent.sh >> /etc/hetrixtools/hetrixtools_cron.log 2>&1
+
+# Pterodactyl
+* * * * * php /var/www/pterodactyl/artisan schedule:run >> /dev/null 2>&1

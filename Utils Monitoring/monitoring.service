@@ -1,0 +1,10 @@
+[Unit]
+Description=System Monitoring Service
+After=network.target
+
+[Service]
+ExecStart=/scripts/pinkcloud/MonitorScript.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
