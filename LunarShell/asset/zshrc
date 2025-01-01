@@ -14,6 +14,11 @@ PROMPT='[%n@%m]%~%# '    # default prompt
 # bindkey -v             # vi key bindings
 # bindkey -e             # emacs key bindings
 bindkey ' ' magic-space  # also do history expansion on space
+bindkey '^[[H' beginning-of-line # Home key
+bindkey '^[[F' end-of-line # End key
+bindkey '^[[3~' delete-char # Del key
+bindkey '^[[1;5C' forward-word # Ctrl+Right
+bindkey '^[[1;5D' backward-word # Ctrl+Left
 
 # Provide pathmunge for /etc/profile.d scripts
 pathmunge()
