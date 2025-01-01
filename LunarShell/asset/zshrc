@@ -11,6 +11,9 @@
 PROMPT='[%n@%m]%~%# '    # default prompt
 #RPROMPT=' %~'     # prompt for right side of screen
 
+# Compat things
+HOSTNAME=$(hostname)
+
 # bindkey -v             # vi key bindings
 # bindkey -e             # emacs key bindings
 bindkey ' ' magic-space  # also do history expansion on space
@@ -50,5 +53,10 @@ _src_etc_profile_d()
     fi
 }
 _src_etc_profile_d
+
+function set_win_title(){
+    echo -ne "\033]0;${USER}@${HOSTNAME}:$(echo -ne "${PWD}" | sed "s,${HOME},~,")\007"
+}
+precmd_functions+=(set_win_title)
 
 unset -f pathmunge _src_etc_profile_d
