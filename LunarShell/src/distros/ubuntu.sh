@@ -61,7 +61,7 @@ echo "[/] Downloading files for LunarShell.."
 sudo curl --silent https://shell.lunarlabs.cc/asset/starship.toml > /etc/starship.toml
 sudo curl --silent https://shell.lunarlabs.cc/asset/sshmotd.sh > /etc/profile.d/sshmotd.sh
 sudo curl --silent https://shell.lunarlabs.cc/asset/bashrc_ub20 > /etc/bash.bashrc
-sudo curl --silent https://shell.lunarlabs.cc/asset/zshrc_ub20 > /etc/zsh/zshrc
+sudo curl --silent https://shell.lunarlabs.cc/asset/zshrc > /etc/zsh/zshrc
 sudo curl --silent https://shell.lunarlabs.cc/asset/banner > /etc/banner
 echo "[+] Luna files downloaded and installed"
 echo "[/] Applying Starship-specific configurations.."

@@ -61,7 +61,7 @@ echo "[/] Downloading files for LunarShell.."
 sudo curl --silent https://shell.lunarlabs.cc/asset/starship.toml -o /etc/starship.toml
 sudo curl --silent https://shell.lunarlabs.cc/asset/sshmotd.sh -o /etc/profile.d/sshmotd.sh
 sudo curl --silent https://shell.lunarlabs.cc/asset/bashrc_el8 -o /etc/bash.bashrc
-sudo curl --silent https://shell.lunarlabs.cc/asset/zshrc_el8 -o /etc/zsh/zshrc
+sudo curl --silent https://shell.lunarlabs.cc/asset/zshrc -o /etc/zsh/zshrc
 echo "[+] LunarShell files downloaded and installed"
 echo "[/] Applying Starship-specific configurations.."
 echo "export STARSHIP_CONFIG=/etc/starship.toml" | sudo tee /etc/profile.d/pinkcloud-var.sh > /dev/null
