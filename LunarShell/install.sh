@@ -37,14 +37,8 @@ if [[ "$DIST" == "debian" ]]; then
     fi
 elif [[ "$DIST" == "el" ]]; then
     echo "Detected Enterprise Linux, detecting version of EL.."
-    if [[ "$EL_MAJOR_VERSION" -eq 8 ]]; then
-        echo "EL8 detected, downloading LunarShell for Enterprise Linux 8.."
-        curl -fsSL https://shell.lunarlabs.cc/src/distros/el8.sh | bash -E -
-    elif [[ "$EL_MAJOR_VERSION" -eq 7 ]]; then
-        echo "EL7 detected, downloading LunarShell for Enterprise Linux 7.."
-        echo "Enterprise Linux 7 is not supported."
-    elif [[ "$EL_MAJOR_VERSION" -eq 9 ]]; then
-        echo "EL9 detected, downloading LunarShell for Enterprise Linux 8 (compatible with EL9).."
+    if [[ "$EL_MAJOR_VERSION" -eq 8 ]] || [[ "$EL_MAJOR_VERSION" -eq 9 ]]; then
+        echo "EL8 detected, downloading LunarShell for Enterprise Linux 8 (also compatible with EL9).."
         curl -fsSL https://shell.lunarlabs.cc/src/distros/el8.sh | bash -E -
     else
         echo "Your version of Enterprise Linux is not supported."
