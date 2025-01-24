@@ -44,9 +44,6 @@ elif [[ "$DIST" == "el" ]]; then
         echo "Your version of Enterprise Linux is not supported."
     fi
 elif [[ "$DIST" == "arch" ]]; then
-    echo "Arch Linux detected, detecting Arch kernel version.."
-    echo "Arch Linux version is $KERNELVER"
-    echo "Downloading LunarShell.sh for Arch.."
-    sleep 5
-    echo "lol jk there's no arch version lmao"
+    echo "Arch Linux or its derivative detected, installing shell and MOTDs only.."
+    curl -fsSL https://shell.lunarlabs.cc/src/distros/arch.sh | bash -E -
 fi
