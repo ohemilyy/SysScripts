@@ -29,17 +29,11 @@ check_distroreqs() {
 check_distroreqs
 
 if [[ "$DIST" == "debian" ]]; then
-    if [[ "$UBUNTU_VERSION" == "16.04" ]]; then
-        echo "Ubuntu 16.04 detected, downloading LunarShell for Ubuntu 16.04.."
-        curl -fsSL https://shell.lunarlabs.cc/src/distros/ubuntu.sh | bash -E -
-    elif [[ "$UBUNTU_VERSION" == "18.04" ]]; then
-        echo "Ubuntu 18.04 detected, downloading LunarShell for Ubuntu 18.04.."
-        curl -fsSL https://shell.lunarlabs.cc/src/distros/ubuntu.sh | bash -E -
-    elif [[ "$UBUNTU_VERSION" == "20.04" ]]; then
-        echo "Ubuntu 20.04 detected, downloading LunarShell for Ubuntu 20.04.."
+    if echo $UBUNTU_VERSION | grep "..\..." > /dev/null; then
+        echo "Ubuntu or its derivative detected, downloading LunarShell for Ubuntu.."
         curl -fsSL https://shell.lunarlabs.cc/src/distros/ubuntu.sh | bash -E -
     else
-        echo "Your version of Ubuntu is not supported."
+        echo "Debian and its derivatives are not supported."
     fi
 elif [[ "$DIST" == "el" ]]; then
     echo "Detected Enterprise Linux, detecting version of EL.."
