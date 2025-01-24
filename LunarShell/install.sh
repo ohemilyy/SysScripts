@@ -20,10 +20,8 @@ check_distroreqs() {
     elif [ -f "/etc/redhat-release" ]; then
         DIST=el
         EL_MAJOR_VERSION=`sed -rn 's/.*([0-9])\.[0-9].*/\1/p' /etc/redhat-release`
-        EL_MINOR_VERSION=`sed -rn 's/.*[0-9].([0-9]).*/\1/p' /etc/redhat-release`
         if [ -f "/etc/fedora-release" ]; then
             DIST=fedora
-            FEDORA_VERSION=`cat /etc/system-release | grep -ow -E [[:digit:]]+`
         fi
     fi
 }
@@ -63,7 +61,4 @@ elif [[ "$DIST" == "arch" ]]; then
     echo "Downloading LunarShell.sh for Arch.."
     sleep 5
     echo "lol jk there's no arch version lmao"
-elif [[ "$DIST" == "fedora" ]]; then
-    echo "Detected Fedora, detecting version of Fedora.."
-    echo "Fedora version is $FEDORA_VERSION"
 fi
