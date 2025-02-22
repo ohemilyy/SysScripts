@@ -20,10 +20,8 @@ check_distroreqs() {
     elif [ -f "/etc/redhat-release" ]; then
         DIST=el
         EL_MAJOR_VERSION=`sed -rn 's/.*([0-9])\.[0-9].*/\1/p' /etc/redhat-release`
-        EL_MINOR_VERSION=`sed -rn 's/.*[0-9].([0-9]).*/\1/p' /etc/redhat-release`
         if [ -f "/etc/fedora-release" ]; then
             DIST=fedora
-            FEDORA_VERSION=`cat /etc/system-release | grep -ow -E [[:digit:]]+`
         fi
     fi
 }
@@ -31,39 +29,21 @@ check_distroreqs() {
 check_distroreqs
 
 if [[ "$DIST" == "debian" ]]; then
-    if [[ "$UBUNTU_VERSION" == "16.04" ]]; then
-        echo "Ubuntu 16.04 detected, downloading LunarShell for Ubuntu 16.04.."
-        curl -fsSL https://shell.lunarlabs.cc/src/distros/ubuntu.sh | bash -E -
-    elif [[ "$UBUNTU_VERSION" == "18.04" ]]; then
-        echo "Ubuntu 18.04 detected, downloading LunarShell for Ubuntu 18.04.."
-        curl -fsSL https://shell.lunarlabs.cc/src/distros/ubuntu.sh | bash -E -
-    elif [[ "$UBUNTU_VERSION" == "20.04" ]]; then
-        echo "Ubuntu 20.04 detected, downloading LunarShell for Ubuntu 20.04.."
+    if echo $UBUNTU_VERSION | grep "..\..." > /dev/null; then
+        echo "Ubuntu or its derivative detected, downloading LunarShell for Ubuntu.."
         curl -fsSL https://shell.lunarlabs.cc/src/distros/ubuntu.sh | bash -E -
     else
-        echo "Your version of Ubuntu is not supported."
+        echo "Debian and its derivatives are not supported."
     fi
 elif [[ "$DIST" == "el" ]]; then
     echo "Detected Enterprise Linux, detecting version of EL.."
-    if [[ "$EL_MAJOR_VERSION" -eq 8 ]]; then
-        echo "EL8 detected, downloading LunarShell for Enterprise Linux 8.."
-        curl -fsSL https://shell.lunarlabs.cc/src/distros/el8.sh | bash -E -
-    elif [[ "$EL_MAJOR_VERSION" -eq 7 ]]; then
-        echo "EL7 detected, downloading LunarShell for Enterprise Linux 7.."
-        echo "Enterprise Linux 7 is not supported."
-    elif [[ "$EL_MAJOR_VERSION" -eq 9 ]]; then
-        echo "EL9 detected, downloading LunarShell for Enterprise Linux 8 (compatible with EL9).."
+    if [[ "$EL_MAJOR_VERSION" -eq 8 ]] || [[ "$EL_MAJOR_VERSION" -eq 9 ]]; then
+        echo "EL8 detected, downloading LunarShell for Enterprise Linux 8 (also compatible with EL9).."
         curl -fsSL https://shell.lunarlabs.cc/src/distros/el8.sh | bash -E -
     else
         echo "Your version of Enterprise Linux is not supported."
     fi
 elif [[ "$DIST" == "arch" ]]; then
-    echo "Arch Linux detected, detecting Arch kernel version.."
-    echo "Arch Linux version is $KERNELVER"
-    echo "Downloading LunarShell.sh for Arch.."
-    sleep 5
-    echo "lol jk there's no arch version lmao"
-elif [[ "$DIST" == "fedora" ]]; then
-    echo "Detected Fedora, detecting version of Fedora.."
-    echo "Fedora version is $FEDORA_VERSION"
+    echo "Arch Linux or its derivative detected, installing shell and MOTDs only.."
+    curl -fsSL https://shell.lunarlabs.cc/src/distros/arch.sh | bash -E -
 fi

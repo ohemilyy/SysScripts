@@ -43,11 +43,11 @@ _src_etc_profile_d()
 
 
     # from bashrc, with zsh fixes
-    if [[ ! -o login ]]; then # We're not a login shell
+    if [ "$SSH_TTY" ]; then
         for i in /etc/profile.d/*.sh; do
-	    if [ -r "$i" ]; then
-	        . $i
-	    fi
+            if [ -r "$i" ]; then
+                . $i
+            fi
         done
         unset i
     fi
