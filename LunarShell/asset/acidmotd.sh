@@ -79,7 +79,7 @@ INCLUDE_FILE="ownscript.sh"
 generate_unit_byte() {
     # 1 - unit in M
 
-    if [ "$1" -ge 1024 ]; then
+    if [[ "$1" -ge 1024 ]]; then
         unit_symbol="G"
         unit_value=$(echo "$1/1024" | bc -l | LANG=C xargs printf "%.1f\n")
     else
@@ -195,7 +195,7 @@ generate_bar_disk() {
     bar_disk_used=$(generate_unit_byte "$3")
     bar_disk_used="$(generate_space "$bar_disk_used" 5)$bar_disk_used used"
 
-    bar_disk_available=$(( $2 - $3 ))
+    bar_disk_available=$(( ${2} - ${3} ))
     bar_disk_available="$(generate_unit_byte "$bar_disk_available") available"
 
     printf "           %s%s / %s\\n" "$bar_disk_mount" "$bar_disk_used" "$bar_disk_available"
@@ -336,27 +336,31 @@ print_diskspace() {
 
     diskspace_index=0
     echo "$diskspace_devices" | while read -r line; do
+        # Snaps break this.
+        # No function must be run if we're dealing with a snap since those are
+        # squashfs devices.
         diskspace_disk_name="$(echo "$line" | jq -r '.name')"
         diskspace_disk_mount="$(echo "$line" | jq -r '.mountpoint')"
+	if [[ "$diskspace_disk_mount" != "/snap/"* ]]; then
+            diskspace_disk_size="$(echo "$diskspace_partitions" | grep "$diskspace_disk_name " | awk '{ print $2 }')"
+            diskspace_disk_used="$(echo "$diskspace_partitions" | grep "$diskspace_disk_name " | awk '{ print $3 }')"
 
-        diskspace_disk_size="$(echo "$diskspace_partitions" | grep "$diskspace_disk_name " | awk '{ print $2 }')"
-        diskspace_disk_used="$(echo "$diskspace_partitions" | grep "$diskspace_disk_name " | awk '{ print $3 }')"
+            if [ -z "$diskspace_disk_size" ]; then
+                diskspace_disk_size="$(echo "$diskspace_partitions" | grep "$diskspace_disk_mount" | awk '{ print $2 }')"
+            fi
 
-        if [ -z "$diskspace_disk_size" ]; then
-            diskspace_disk_size="$(echo "$diskspace_partitions" | grep "$diskspace_disk_mount" | awk '{ print $2 }')"
+            if [ -z "$diskspace_disk_used" ]; then
+                diskspace_disk_used="$(echo "$diskspace_partitions" | grep "$diskspace_disk_mount" | awk '{ print $3 }')"
+            fi
+
+            if [ "$diskspace_index" -ne 0 ]; then
+                printf "\\n"
+            fi
+
+            diskspace_index=$(( diskspace_index + 1 ))
+
+            generate_bar_disk "$DISKSPACE_ICON" "$diskspace_disk_size" "$diskspace_disk_used" "$diskspace_disk_mount"
         fi
-
-        if [ -z "$diskspace_disk_used" ]; then
-            diskspace_disk_used="$(echo "$diskspace_partitions" | grep "$diskspace_disk_mount" | awk '{ print $3 }')"
-        fi
-
-        if [ "$diskspace_index" -ne 0 ]; then
-            printf "\\n"
-        fi
-
-        diskspace_index=$(( diskspace_index + 1 ))
-
-        generate_bar_disk "$DISKSPACE_ICON" "$diskspace_disk_size" "$diskspace_disk_used" "$diskspace_disk_mount"
     done
 }
 
